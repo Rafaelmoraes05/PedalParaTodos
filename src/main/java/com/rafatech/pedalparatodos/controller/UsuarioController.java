@@ -31,7 +31,7 @@ public class UsuarioController {
     //Lista todos os Usuarios
     @GetMapping
     public ResponseEntity<List<UsuarioDTO>> listAllUsuarios() {
-        List<Usuario> usuarios = usuarioService.findAll();
+        List<Usuario> usuarios = usuarioService.listAll();
         List<UsuarioDTO> usuariosDTO = usuarios.stream()
                 .map(Mapper::toUsuarioDTO)
                 .collect(Collectors.toList());
