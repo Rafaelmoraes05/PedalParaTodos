@@ -26,7 +26,6 @@ public class Pedal {
         private String descricao;
 
         @Enumerated(EnumType.STRING)
-        @Column(name = "categoria", nullable = false)
         private Categoria categoria;
 
         @Column(name = "data_hora", nullable = false)
@@ -36,7 +35,6 @@ public class Pedal {
         private String localEncontro;
 
         @Enumerated(EnumType.STRING)
-        @Column(name = "nivel_dificuldade", nullable = false)
         private NivelDificuldade nivelDificuldade;
 
         @Column(name = "link_whatsapp")

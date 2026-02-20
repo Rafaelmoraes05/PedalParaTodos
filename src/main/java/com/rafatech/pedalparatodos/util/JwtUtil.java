@@ -14,7 +14,7 @@ import java.util.function.Function;
 @Component
 public class JwtUtil {
 
-    // Em um projeto real, esta chave deve estar em application.properties e ser muito mais complexa.
+
     private final String SECRET_KEY = "segredoSuperSecretoParaOPedalParaTodosNaoPodeSerSimples";
 
     // Extrai o email (username) do token

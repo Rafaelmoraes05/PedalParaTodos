@@ -19,55 +19,37 @@ import java.util.stream.Collectors;
 public class PedalController {
 
     private final PedalService pedalService;
-    private final ParticipacaoService participacaoService;
 
-    public PedalController(PedalService pedalService, ParticipacaoService participacaoService) {
+    public PedalController(PedalService pedalService) {
         this.pedalService = pedalService;
-        this.participacaoService = participacaoService;
     }
 
-    // Criar Novo Pedal
     @PostMapping
-    public ResponseEntity<PedalDTO> createPedal(@Valid @RequestBody CreatePedalRequest createPedalRequest) {
-        Pedal pedal = pedalService.createPedal(createPedalRequest);
-        return ResponseEntity.status(HttpStatus.CREATED).body(Mapper.toPedalDTO(pedal));
+    public ResponseEntity<PedalDTO> createPedal(
+            @Valid @RequestBody CreatePedalRequest request) {
+
+        return ResponseEntity
+                .status(HttpStatus.CREATED)
+                .body(pedalService.createPedal(request));
     }
 
-    //Listar todos os Pedais
     @GetMapping
     public ResponseEntity<List<PedalDTO>> listAllPedais() {
-        List<Pedal> pedais = pedalService.listAll();
-        List<PedalDTO> pedaisDTO = pedais.stream()
-                .map(pedal -> {
-                    PedalDTO dto = Mapper.toPedalDTO(pedal);
-                    dto.setNumeroParticipantes(pedal.getParticipacoes().size());
-                    return dto;
-                })
-                .collect(Collectors.toList());
-        return ResponseEntity.ok(pedaisDTO);
+        return ResponseEntity.ok(pedalService.listAll());
     }
 
-    //Buscar um Pedal pelo ID
     @GetMapping("/{id}")
     public ResponseEntity<PedalDTO> getPedalById(@PathVariable Long id) {
-        Pedal pedal = pedalService.findById(id);
-        PedalDTO pedalDTO = Mapper.toPedalDTO(pedal);
-        // Preenche o número de participantes para este pedal específico
-        pedalDTO.setNumeroParticipantes(participacaoService.listUsuariosPorPedal(id).size());
-        return ResponseEntity.ok(pedalDTO);
+        return ResponseEntity.ok(pedalService.findById(id));
     }
 
-    //Listar Pedais de um organizador específico
     @GetMapping("/organizador/{organizadorId}")
-    public ResponseEntity<List<PedalDTO>> listPedaisByOrganizador(@PathVariable Long organizadorId) {
-        List<Pedal> pedais = pedalService.listByOrganizador(organizadorId);
-        List<PedalDTO> pedaisDTO = pedais.stream()
-                .map(pedal -> {
-                    PedalDTO dto = Mapper.toPedalDTO(pedal);
-                    dto.setNumeroParticipantes(pedal.getParticipacoes().size());
-                    return dto;
-                })
-                .collect(Collectors.toList());
-        return ResponseEntity.ok(pedaisDTO);
+    public ResponseEntity<List<PedalDTO>> listPedaisByOrganizador(
+            @PathVariable Long organizadorId) {
+
+        return ResponseEntity.ok(
+                pedalService.listByOrganizador(organizadorId)
+        );
     }
 }
+
