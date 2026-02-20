@@ -3,6 +3,7 @@ package com.rafatech.pedalparatodos.repository;
 import com.rafatech.pedalparatodos.entity.Participacao;
 import com.rafatech.pedalparatodos.entity.Usuario;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -14,4 +15,6 @@ public interface ParticipacaoRepository extends JpaRepository<Participacao, Inte
     Optional<Participacao> findByUsuarioIdAndPedalId(Long usuarioId, Long pedalId);
     List<Participacao> findByUsuarioId(Long usuarioId);
     List<Participacao> findByPedalId(Long pedalId);
+    @Query("SELECT COUNT(p) FROM Participacao p WHERE p.pedal.id = :pedalId")
+    Long countByPedalId(Long pedalId);
 }
