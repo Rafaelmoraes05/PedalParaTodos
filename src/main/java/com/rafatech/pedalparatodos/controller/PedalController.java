@@ -51,5 +51,23 @@ public class PedalController {
                 pedalService.listByOrganizador(organizadorId)
         );
     }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<PedalDTO> updatePedal(
+            @PathVariable Long id,
+            @Valid @RequestBody CreatePedalRequest request) {
+
+        return ResponseEntity.ok(
+                pedalService.updatePedal(id, request)
+        );
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deletePedal(@PathVariable Long id) {
+
+        pedalService.deletePedal(id);
+
+        return ResponseEntity.noContent().build();
+    }
 }
 

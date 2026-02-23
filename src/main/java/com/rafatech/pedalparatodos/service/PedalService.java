@@ -10,6 +10,14 @@ import com.rafatech.pedalparatodos.repository.PedalRepository;
 import com.rafatech.pedalparatodos.repository.UsuarioRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.access.AccessDeniedException;
+import org.springframework.security.access.AccessDeniedException;
+import org.springframework.transaction.annotation.Transactional;
+
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -32,9 +40,13 @@ public class PedalService {
     @Transactional
     public PedalDTO createPedal(CreatePedalRequest dto) {
 
-        Usuario organizador = usuarioRepository.findById(dto.getOrganizadorId())
+        // 🔐 Pegar usuário logado pelo token
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String email = authentication.getName();
+
+        Usuario organizador = usuarioRepository.findByEmail(email)
                 .orElseThrow(() ->
-                        new ResourceNotFoundException("Organizador não encontrado com ID: " + dto.getOrganizadorId()));
+                        new ResourceNotFoundException("Usuário autenticado não encontrado"));
 
         Pedal pedal = new Pedal(
                 dto.getNomePedal(),
@@ -101,5 +113,70 @@ public class PedalService {
                 pedal.getOrganizador().getNome(),
                 total != null ? total.intValue() : 0
         );
+    }
+
+    private Usuario getUsuarioLogado() {
+
+        Authentication authentication = SecurityContextHolder
+                .getContext()
+                .getAuthentication();
+
+        String email = authentication.getName();
+
+        return usuarioRepository.findByEmail(email)
+                .orElseThrow(() ->
+                        new ResourceNotFoundException("Usuário logado não encontrado."));
+    }
+
+    @Transactional
+    public PedalDTO updatePedal(Long id, CreatePedalRequest dto) {
+
+        // 1️⃣ Buscar pedal
+        Pedal pedal = pedalRepository.findById(id)
+                .orElseThrow(() ->
+                        new ResourceNotFoundException("Pedal não encontrado com ID: " + id));
+
+        // 2️⃣ Buscar usuário logado
+        Usuario usuarioLogado = getUsuarioLogado();
+
+        // 3️⃣ Validar se é o organizador
+        if (!pedal.getOrganizador().getId().equals(usuarioLogado.getId())) {
+            throw new AccessDeniedException("Você não pode editar este pedal.");
+        }
+
+        // 4️⃣ Atualizar campos
+        pedal.setNomePedal(dto.getNomePedal());
+        pedal.setNomeGrupo(dto.getNomeGrupo());
+        pedal.setDescricao(dto.getDescricao());
+        pedal.setCategoria(dto.getCategoria());
+        pedal.setDataHora(dto.getDataHora());
+        pedal.setLocalEncontro(dto.getLocalEncontro());
+        pedal.setNivelDificuldade(dto.getNivelDificuldade());
+        pedal.setLinkWhatsapp(dto.getLinkWhatsapp());
+
+        // 5️⃣ Salvar
+        Pedal updated = pedalRepository.save(pedal);
+
+        return mapToDTO(updated);
+    }
+
+    @Transactional
+    public void deletePedal(Long id) {
+
+        // 1️⃣ Buscar pedal
+        Pedal pedal = pedalRepository.findById(id)
+                .orElseThrow(() ->
+                        new ResourceNotFoundException("Pedal não encontrado com ID: " + id));
+
+        // 2️⃣ Buscar usuário logado
+        Usuario usuarioLogado = getUsuarioLogado();
+
+        // 3️⃣ Verificar se é o organizador
+        if (!pedal.getOrganizador().getId().equals(usuarioLogado.getId())) {
+            throw new AccessDeniedException("Você não pode deletar este pedal.");
+        }
+
+        // 4️⃣ Deletar
+        pedalRepository.delete(pedal);
     }
 }
