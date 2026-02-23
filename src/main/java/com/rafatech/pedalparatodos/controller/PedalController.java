@@ -1,6 +1,7 @@
 package com.rafatech.pedalparatodos.controller;
 
 import com.rafatech.pedalparatodos.dto.CreatePedalRequest;
+import com.rafatech.pedalparatodos.dto.ParticipacaoDTO;
 import com.rafatech.pedalparatodos.dto.PedalDTO;
 import com.rafatech.pedalparatodos.entity.Pedal;
 import com.rafatech.pedalparatodos.service.ParticipacaoService;
@@ -19,10 +20,14 @@ import java.util.stream.Collectors;
 public class PedalController {
 
     private final PedalService pedalService;
+    private final ParticipacaoService participacaoService;
 
-    public PedalController(PedalService pedalService) {
+    public PedalController(PedalService pedalService,
+                           ParticipacaoService participacaoService) {
         this.pedalService = pedalService;
+        this.participacaoService = participacaoService;
     }
+
 
     @PostMapping
     public ResponseEntity<PedalDTO> createPedal(
@@ -52,6 +57,14 @@ public class PedalController {
         );
     }
 
+    @GetMapping("/{id}/participantes")
+    public ResponseEntity<List<ParticipacaoDTO>> listarParticipantes(@PathVariable Long id) {
+        return ResponseEntity.ok(
+                participacaoService.listarParticipantesPorPedal(id)
+        );
+    }
+
+
     @PutMapping("/{id}")
     public ResponseEntity<PedalDTO> updatePedal(
             @PathVariable Long id,
@@ -70,4 +83,3 @@ public class PedalController {
         return ResponseEntity.noContent().build();
     }
 }
-

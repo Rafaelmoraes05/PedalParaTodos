@@ -44,13 +44,13 @@ public class ParticipacaoController {
         return ResponseEntity.ok(pedaisDTO);
     }
 
-    //listar todos os usuários que confirmaram presença em um pedal específico
-    @GetMapping("/pedal/{pedalId}")
-    public ResponseEntity<List<UsuarioDTO>> listParticipantesPorPedal(@PathVariable Long pedalId) {
-        List<Usuario> usuarios = participacaoService.listUsuariosPorPedal(pedalId);
-        List<UsuarioDTO> usuariosDTO = usuarios.stream()
-                .map(Mapper::toUsuarioDTO)
-                .collect(Collectors.toList());
-        return ResponseEntity.ok(usuariosDTO);
-    }
+//    //listar todos os usuários que confirmaram presença em um pedal específico
+//    @GetMapping("/pedal/{pedalId}")
+//    public ResponseEntity<List<UsuarioDTO>> listParticipantesPorPedal(@PathVariable Long pedalId) {
+//        List<Usuario> usuarios = participacaoService.listUsuariosPorPedal(pedalId);
+//        List<UsuarioDTO> usuariosDTO = usuarios.stream()
+//                .map(Mapper::toUsuarioDTO)
+//                .collect(Collectors.toList());
+//        return ResponseEntity.ok(usuariosDTO);
+//    }
 }

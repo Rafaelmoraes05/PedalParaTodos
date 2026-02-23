@@ -1,6 +1,7 @@
 package com.rafatech.pedalparatodos.service;
 
 import com.rafatech.pedalparatodos.dto.ConfirmacaoRequest;
+import com.rafatech.pedalparatodos.dto.ParticipacaoDTO;
 import com.rafatech.pedalparatodos.entity.Participacao;
 import com.rafatech.pedalparatodos.entity.Pedal;
 import com.rafatech.pedalparatodos.entity.Usuario;
@@ -64,14 +65,22 @@ public class ParticipacaoService {
     }
 
     @Transactional(readOnly = true)
-    public List<Usuario> listUsuariosPorPedal(Long pedalId) {
+    public List<ParticipacaoDTO> listarParticipantesPorPedal(Long pedalId) {
 
         pedalRepository.findById(pedalId)
-                .orElseThrow(() -> new ResourceNotFoundException("Pedal não encontrado com ID: " + pedalId));
+                .orElseThrow(() -> new ResourceNotFoundException(
+                        "Pedal não encontrado com ID: " + pedalId
+                ));
 
-        // Busca todas as participações no pedal e mapeia para a entidade Usuario
         return participacaoRepository.findByPedalId(pedalId).stream()
-                .map(Participacao::getUsuario)
-                .collect(Collectors.toList());
+                .map(p -> new ParticipacaoDTO(
+                        p.getId(),
+                        p.getUsuario().getId(),
+                        p.getUsuario().getNome(),
+                        p.getPedal().getId(),
+                        p.getPedal().getNomePedal(),
+                        p.getDataConfirmacao()
+                ))
+                .toList();
     }
 }
