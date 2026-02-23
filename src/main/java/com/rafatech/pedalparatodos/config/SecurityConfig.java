@@ -1,5 +1,7 @@
 package com.rafatech.pedalparatodos.config;
 
+import com.rafatech.pedalparatodos.security.CustomAccessDeniedHandler;
+import com.rafatech.pedalparatodos.security.CustomAuthenticationEntryPoint;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -20,6 +22,11 @@ public class SecurityConfig {
 
     @Autowired
     private JwtRequestFilter jwtRequestFilter;
+    @Autowired
+    private CustomAuthenticationEntryPoint authenticationEntryPoint;
+    @Autowired
+    private CustomAccessDeniedHandler accessDeniedHandler;
+
 
 
     @Bean
@@ -35,7 +42,11 @@ public class SecurityConfig {
                 .sessionManagement(session -> session
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 )
-                .addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class);
+                .addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class)
+                .exceptionHandling(exception -> exception
+                        .authenticationEntryPoint(authenticationEntryPoint)
+                        .accessDeniedHandler(accessDeniedHandler)
+                );
 
         return http.build();
     }

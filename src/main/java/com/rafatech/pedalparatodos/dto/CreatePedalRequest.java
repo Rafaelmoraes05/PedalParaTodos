@@ -10,30 +10,40 @@ import java.time.LocalDateTime;
 import java.util.Objects;
 
 public class CreatePedalRequest {
-    @NotNull(message = "O ID do organizador é obrigatório")
-    private Long organizadorId;
+
     @NotBlank(message = "O nome do pedal é obrigatório")
     private String nomePedal;
+
     private String nomeGrupo;
+
     private String descricao;
+
     @NotNull(message = "A categoria é obrigatória")
     private Categoria categoria;
+
     @NotNull(message = "A data e hora do pedal são obrigatórias")
-    @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss") // Formato ISO para JSON (ex: 2025-11-01T07:00:00)
+    @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss")
     private LocalDateTime dataHora;
+
     @NotBlank(message = "O local de encontro é obrigatório")
     private String localEncontro;
+
     @NotNull(message = "O nível de dificuldade é obrigatório")
     private NivelDificuldade nivelDificuldade;
+
     private String linkWhatsapp;
 
     public CreatePedalRequest() {
     }
 
-    public CreatePedalRequest(Long organizadorId, String nomePedal, String nomeGrupo, String descricao,
-                              Categoria categoria, LocalDateTime dataHora, String localEncontro,
-                              NivelDificuldade nivelDificuldade, String linkWhatsapp) {
-        this.organizadorId = organizadorId;
+    public CreatePedalRequest(String nomePedal,
+                              String nomeGrupo,
+                              String descricao,
+                              Categoria categoria,
+                              LocalDateTime dataHora,
+                              String localEncontro,
+                              NivelDificuldade nivelDificuldade,
+                              String linkWhatsapp) {
         this.nomePedal = nomePedal;
         this.nomeGrupo = nomeGrupo;
         this.descricao = descricao;
@@ -45,10 +55,6 @@ public class CreatePedalRequest {
     }
 
     // --- Getters ---
-    public Long getOrganizadorId() {
-        return organizadorId;
-    }
-
     public String getNomePedal() {
         return nomePedal;
     }
@@ -82,10 +88,6 @@ public class CreatePedalRequest {
     }
 
     // --- Setters ---
-    public void setOrganizadorId(Long organizadorId) {
-        this.organizadorId = organizadorId;
-    }
-
     public void setNomePedal(String nomePedal) {
         this.nomePedal = nomePedal;
     }
@@ -124,22 +126,20 @@ public class CreatePedalRequest {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         CreatePedalRequest that = (CreatePedalRequest) o;
-        return Objects.equals(organizadorId, that.organizadorId) &&
-                Objects.equals(nomePedal, that.nomePedal) &&
+        return Objects.equals(nomePedal, that.nomePedal) &&
                 categoria == that.categoria &&
                 Objects.equals(dataHora, that.dataHora);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(organizadorId, nomePedal, categoria, dataHora);
+        return Objects.hash(nomePedal, categoria, dataHora);
     }
 
     @Override
     public String toString() {
         return "CreatePedalRequest{" +
-                "organizadorId=" + organizadorId +
-                ", nomePedal='" + nomePedal + '\'' +
+                "nomePedal='" + nomePedal + '\'' +
                 ", nomeGrupo='" + nomeGrupo + '\'' +
                 ", categoria=" + categoria +
                 ", dataHora=" + dataHora +
