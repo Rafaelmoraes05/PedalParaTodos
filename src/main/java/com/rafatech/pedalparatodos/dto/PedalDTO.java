@@ -13,21 +13,40 @@ public class PedalDTO {
     private String nomeGrupo;
     private String descricao;
     private Categoria categoria;
+
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime dataHora;
+
     private String localEncontro;
+
+    private String cidade;
+    private String estado;
+    private String pais;
+
     private NivelDificuldade nivelDificuldade;
     private String linkWhatsapp;
     private Long organizadorId;
     private String organizadorNome;
     private Integer numeroParticipantes;
 
-    public PedalDTO() {
-    }
+    public PedalDTO() {}
 
-    public PedalDTO(Long id, String nomePedal, String nomeGrupo, String descricao, Categoria categoria,
-                    LocalDateTime dataHora, String localEncontro, NivelDificuldade nivelDificuldade,
-                    String linkWhatsapp, Long organizadorId, String organizadorNome, Integer numeroParticipantes) {
+    public PedalDTO(Long id,
+                    String nomePedal,
+                    String nomeGrupo,
+                    String descricao,
+                    Categoria categoria,
+                    LocalDateTime dataHora,
+                    String localEncontro,
+                    String cidade,
+                    String estado,
+                    String pais,
+                    NivelDificuldade nivelDificuldade,
+                    String linkWhatsapp,
+                    Long organizadorId,
+                    String organizadorNome,
+                    Integer numeroParticipantes) {
+
         this.id = id;
         this.nomePedal = nomePedal;
         this.nomeGrupo = nomeGrupo;
@@ -35,6 +54,9 @@ public class PedalDTO {
         this.categoria = categoria;
         this.dataHora = dataHora;
         this.localEncontro = localEncontro;
+        this.cidade = cidade;
+        this.estado = estado;
+        this.pais = pais;
         this.nivelDificuldade = nivelDificuldade;
         this.linkWhatsapp = linkWhatsapp;
         this.organizadorId = organizadorId;
@@ -138,6 +160,30 @@ public class PedalDTO {
 
     public void setNumeroParticipantes(Integer numeroParticipantes) {
         this.numeroParticipantes = numeroParticipantes;
+    }
+
+    public String getCidade() {
+        return cidade;
+    }
+
+    public void setCidade(String cidade) {
+        this.cidade = cidade;
+    }
+
+    public String getEstado() {
+        return estado;
+    }
+
+    public void setEstado(String estado) {
+        this.estado = estado;
+    }
+
+    public String getPais() {
+        return pais;
+    }
+
+    public void setPais(String pais) {
+        this.pais = pais;
     }
 
     // --- equals(), hashCode(), toString() ---

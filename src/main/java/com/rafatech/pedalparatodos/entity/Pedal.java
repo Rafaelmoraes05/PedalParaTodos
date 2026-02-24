@@ -34,7 +34,18 @@ public class Pedal {
         @Column(name = "local_encontro", nullable = false)
         private String localEncontro;
 
-        @Enumerated(EnumType.STRING)
+        @Column(name = "cidade", nullable = false)
+        private String cidade;
+
+        @Column(name = "estado", nullable = false)
+        private String estado;
+
+        @Column(name = "pais", nullable = false)
+        private String pais;
+
+
+
+    @Enumerated(EnumType.STRING)
         private NivelDificuldade nivelDificuldade;
 
         @Column(name = "link_whatsapp")
@@ -52,20 +63,34 @@ public class Pedal {
         public Pedal() {
         }
 
-        public Pedal(String nomePedal, String nomeGrupo, String descricao, Categoria categoria, LocalDateTime dataHora, String localEncontro, NivelDificuldade nivelDificuldade, String linkWhatsapp, Usuario organizador) {
+        public Pedal(String nomePedal,
+                     String nomeGrupo,
+                     String descricao,
+                     Categoria categoria,
+                     LocalDateTime dataHora,
+                     String localEncontro,
+                     String cidade,
+                     String estado,
+                     String pais,
+                     NivelDificuldade nivelDificuldade,
+                     String linkWhatsapp,
+                     Usuario organizador) {
+
             this.nomePedal = nomePedal;
             this.nomeGrupo = nomeGrupo;
             this.descricao = descricao;
             this.categoria = categoria;
             this.dataHora = dataHora;
             this.localEncontro = localEncontro;
+            this.cidade = cidade;
+            this.estado = estado;
+            this.pais = pais;
             this.nivelDificuldade = nivelDificuldade;
             this.linkWhatsapp = linkWhatsapp;
             this.organizador = organizador;
         }
 
-
-        public Long getId() {
+    public Long getId() {
             return id;
         }
 
@@ -153,6 +178,29 @@ public class Pedal {
             this.participacoes = participacoes;
         }
 
+        public String getCidade() {
+            return cidade;
+        }
+
+        public void setCidade(String cidade) {
+            this.cidade = cidade;
+        }
+
+        public String getEstado() {
+            return estado;
+        }
+
+        public void setEstado(String estado) {
+            this.estado = estado;
+        }
+
+        public String getPais() {
+            return pais;
+        }
+
+        public void setPais(String pais) {
+            this.pais = pais;
+        }
 
         // equals() e hashCode() baseados no ID
         @Override

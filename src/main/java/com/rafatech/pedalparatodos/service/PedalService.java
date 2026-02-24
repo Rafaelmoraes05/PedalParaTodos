@@ -19,6 +19,8 @@ import org.springframework.security.access.AccessDeniedException;
 import org.springframework.transaction.annotation.Transactional;
 
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -55,10 +57,14 @@ public class PedalService {
                 dto.getCategoria(),
                 dto.getDataHora(),
                 dto.getLocalEncontro(),
+                dto.getCidade(),
+                dto.getEstado(),
+                dto.getPais(),
                 dto.getNivelDificuldade(),
                 dto.getLinkWhatsapp(),
                 organizador
         );
+
 
         Pedal saved = pedalRepository.save(pedal);
 
@@ -107,6 +113,9 @@ public class PedalService {
                 pedal.getCategoria(),
                 pedal.getDataHora(),
                 pedal.getLocalEncontro(),
+                pedal.getCidade(),
+                pedal.getEstado(),
+                pedal.getPais(),
                 pedal.getNivelDificuldade(),
                 pedal.getLinkWhatsapp(),
                 pedal.getOrganizador().getId(),
@@ -131,30 +140,33 @@ public class PedalService {
     @Transactional
     public PedalDTO updatePedal(Long id, CreatePedalRequest dto) {
 
-        // 1️⃣ Buscar pedal
+        //Buscar pedal
         Pedal pedal = pedalRepository.findById(id)
                 .orElseThrow(() ->
                         new ResourceNotFoundException("Pedal não encontrado com ID: " + id));
 
-        // 2️⃣ Buscar usuário logado
+        //Buscar usuário logado
         Usuario usuarioLogado = getUsuarioLogado();
 
-        // 3️⃣ Validar se é o organizador
+        //Validar se é o organizador
         if (!pedal.getOrganizador().getId().equals(usuarioLogado.getId())) {
             throw new AccessDeniedException("Você não pode editar este pedal.");
         }
 
-        // 4️⃣ Atualizar campos
+        //Atualizar campos
         pedal.setNomePedal(dto.getNomePedal());
         pedal.setNomeGrupo(dto.getNomeGrupo());
         pedal.setDescricao(dto.getDescricao());
         pedal.setCategoria(dto.getCategoria());
         pedal.setDataHora(dto.getDataHora());
         pedal.setLocalEncontro(dto.getLocalEncontro());
+        pedal.setCidade(dto.getCidade());
+        pedal.setEstado(dto.getEstado());
+        pedal.setPais(dto.getPais());
         pedal.setNivelDificuldade(dto.getNivelDificuldade());
         pedal.setLinkWhatsapp(dto.getLinkWhatsapp());
 
-        // 5️⃣ Salvar
+        //Salvar
         Pedal updated = pedalRepository.save(pedal);
 
         return mapToDTO(updated);
@@ -163,20 +175,64 @@ public class PedalService {
     @Transactional
     public void deletePedal(Long id) {
 
-        // 1️⃣ Buscar pedal
+        //Buscar pedal
         Pedal pedal = pedalRepository.findById(id)
                 .orElseThrow(() ->
                         new ResourceNotFoundException("Pedal não encontrado com ID: " + id));
 
-        // 2️⃣ Buscar usuário logado
+        //Buscar usuário logado
         Usuario usuarioLogado = getUsuarioLogado();
 
-        // 3️⃣ Verificar se é o organizador
+        //Verificar se é o organizador
         if (!pedal.getOrganizador().getId().equals(usuarioLogado.getId())) {
             throw new AccessDeniedException("Você não pode deletar este pedal.");
         }
 
-        // 4️⃣ Deletar
+        //Deletar
         pedalRepository.delete(pedal);
     }
+
+    public List<PedalDTO> filtrar(String cidade, LocalDate data) {
+
+        cidade = (cidade != null && !cidade.isBlank())
+                ? cidade.trim()
+                : null;
+
+        // Nenhum filtro
+        if (cidade == null && data == null) {
+            return listAll();
+        }
+
+        // Apenas cidade
+        if (cidade != null && data == null) {
+            return pedalRepository
+                    .findByCidadeIgnoreCase(cidade)
+                    .stream()
+                    .map(this::mapToDTO)
+                    .toList();
+        }
+
+        // Apenas data
+        if (cidade == null) {
+            LocalDateTime inicio = data.atStartOfDay();
+            LocalDateTime fim = data.plusDays(1).atStartOfDay();
+
+            return pedalRepository
+                    .findByDataHoraBetween(inicio, fim)
+                    .stream()
+                    .map(this::mapToDTO)
+                    .toList();
+        }
+
+        // Cidade + data
+        LocalDateTime inicio = data.atStartOfDay();
+        LocalDateTime fim = data.plusDays(1).atStartOfDay();
+
+        return pedalRepository
+                .findByCidadeIgnoreCaseAndDataHoraBetween(cidade, inicio, fim)
+                .stream()
+                .map(this::mapToDTO)
+                .toList();
+    }
+
 }
