@@ -8,10 +8,12 @@ import com.rafatech.pedalparatodos.service.ParticipacaoService;
 import com.rafatech.pedalparatodos.service.PedalService;
 import com.rafatech.pedalparatodos.util.Mapper;
 import jakarta.validation.Valid;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -39,8 +41,15 @@ public class PedalController {
     }
 
     @GetMapping
-    public ResponseEntity<List<PedalDTO>> listAllPedais() {
-        return ResponseEntity.ok(pedalService.listAll());
+    public ResponseEntity<List<PedalDTO>> listar(
+            @RequestParam(required = false) String cidade,
+            @RequestParam(required = false)
+            @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
+            LocalDate data) {
+
+        return ResponseEntity.ok(
+                pedalService.filtrar(cidade, data)
+        );
     }
 
     @GetMapping("/{id}")

@@ -15,7 +15,6 @@ public class CreatePedalRequest {
     private String nomePedal;
 
     private String nomeGrupo;
-
     private String descricao;
 
     @NotNull(message = "A categoria é obrigatória")
@@ -28,13 +27,21 @@ public class CreatePedalRequest {
     @NotBlank(message = "O local de encontro é obrigatório")
     private String localEncontro;
 
+    @NotBlank(message = "A cidade é obrigatória")
+    private String cidade;
+
+    @NotBlank(message = "O estado é obrigatório")
+    private String estado;
+
+    @NotBlank(message = "O país é obrigatório")
+    private String pais;
+
     @NotNull(message = "O nível de dificuldade é obrigatório")
     private NivelDificuldade nivelDificuldade;
 
     private String linkWhatsapp;
 
-    public CreatePedalRequest() {
-    }
+    public CreatePedalRequest() {}
 
     public CreatePedalRequest(String nomePedal,
                               String nomeGrupo,
@@ -42,14 +49,21 @@ public class CreatePedalRequest {
                               Categoria categoria,
                               LocalDateTime dataHora,
                               String localEncontro,
+                              String cidade,
+                              String estado,
+                              String pais,
                               NivelDificuldade nivelDificuldade,
                               String linkWhatsapp) {
+
         this.nomePedal = nomePedal;
         this.nomeGrupo = nomeGrupo;
         this.descricao = descricao;
         this.categoria = categoria;
         this.dataHora = dataHora;
         this.localEncontro = localEncontro;
+        this.cidade = cidade;
+        this.estado = estado;
+        this.pais = pais;
         this.nivelDificuldade = nivelDificuldade;
         this.linkWhatsapp = linkWhatsapp;
     }
@@ -119,6 +133,14 @@ public class CreatePedalRequest {
     public void setLinkWhatsapp(String linkWhatsapp) {
         this.linkWhatsapp = linkWhatsapp;
     }
+
+    public String getCidade() { return cidade; }
+    public String getEstado() { return estado; }
+    public String getPais() { return pais; }
+
+    public void setCidade(String cidade) { this.cidade = cidade; }
+    public void setEstado(String estado) { this.estado = estado; }
+    public void setPais(String pais) { this.pais = pais; }
 
     // --- equals(), hashCode(), toString() ---
     @Override
